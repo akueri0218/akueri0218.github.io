@@ -10,15 +10,28 @@
             color: white;
         }
 
-        #currentTime {
-            padding: 10px;
-            width: 320px;
+        #timeDisplay {
+            width: 100%;
             height: 80px;
             background-color: #202020;
             font-family: "Open Sans", sans-serif;
             font-size: 60px;
+        }
+        #currentTime {
+            margin: 0;
+            margin-right: 20px;
+            height: 70px;
             vertical-align: text-top;
             text-align: right;
+        }
+        #seekBar {
+            margin: 0;
+            height: 10px;
+            background-color: red;
+        }
+
+        #player-container {
+            text-align: center;
         }
 
         table {
@@ -33,8 +46,13 @@
     </style>
 </head>
 <body>
-    <div id="currentTime"></div>
-    <div id="player"></div>
+    <div id="timeDisplay">
+        <p id="currentTime"></p>
+        <div id="seekBar"></div>
+    </div>
+    <div id="player-container">
+        <div id="player"></div>
+    </div>
     <table>
         <tr>
             <td>width</td>
@@ -75,6 +93,8 @@
         }
 
         const currentTime = document.querySelector('#currentTime');
+        const seekBar = document.querySelector('#seekBar');
+
         const widthInput = document.querySelector('#widthInput');
         const heightInput = document.querySelector('#heightInput');
         const videoIdInput = document.querySelector('#videoIdInput');
@@ -110,12 +130,16 @@
             let min = 0;
             let sec = 0;
 
+            let seek = 0;
+
             if(player) {
                 let time = player.getCurrentTime();
 
                 hour = Math.floor(time / (60 * 60));
                 min = Math.floor((time % (60 * 60)) / 60);
                 sec = Math.floor(time % 60);
+
+                seek = time / player.getDuration();
             }
 
             let text = hour.toString().padStart(3, ' ');
@@ -123,6 +147,7 @@
             text += ':' + sec.toString().padStart(2, '0');
 
             currentTime.innerText = text;
+            seekBar.style.width = (seek * 100) + '%';
         }
 
         function onPlayerReady(event) {
