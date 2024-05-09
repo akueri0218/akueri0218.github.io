@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        input {
+            text-align: right;
+        }
+        input:invalid {
+            background-color: #ffC0C0;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>width</td>
+            <td><input id="widthInput" type="number" value="1280" required/></td>
+        </tr>
+        <tr>
+            <td>height</td>
+            <td><input id="heightInput" type="number" value="720" required/></td>
+        </tr>
+        <tr>
+            <td>video ID</td>
+            <td>
+                <input id="videoIdInput" type="text" required/>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: right;">
+                <input id="applyButton" type="button" value="apply"/>
+            </td>
+        </tr>
+    </table>
+    <div id="player"></div>
+    <script>
+        // load IFrame Player API
+        var tag = document.createElement('script');
+
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYoutubeIframeAPIReady() {
+            console.log('IFrame API ready');
+            player = new YT.player('player', {
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        const widthInput = document.querySelector('#widthInput');
+        const heightInput = document.querySelector('#heightInput');
+        const videoIdInput = document.querySelector('#videoIdInput');
+        const applyButton = document.querySelector('#applyButton');
+
+        let width, height;
+        let videoId;
+
+        applyButton.addEventListener('click', (e) => {
+            console.log('clicked')
+            if(videoIdInput.checkValidity()) {
+                width = widthInput.value;
+                height = heightInput.value;
+                videoId = videoIdInput.value;
+
+                if(player) {
+                    player.setSize(width, height);
+                    player.loadVideoById({videoId: videoId});
+                }
+            }
+        });
+
+        function onPlayerReady(event) {
+            console.log('player ready');
+        }
+
+        function onPlayerStateChange(event) {
+            console.log('state changed');
+        }
+    </script>
+</body>
+</html>
